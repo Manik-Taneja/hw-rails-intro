@@ -10,7 +10,8 @@ class MoviesController < ApplicationController
       @movies = Movie.all
       @all_ratings = Movie.all_ratings
       @rating_param = rate
-      @sorting_on_column = params[:sort]
+      reset
+      @sorting_on_column = session[:sort]
       
       if @sorting_on_column
         @movies = Movie.with_ratings(@rating_param).order(@sorting_on_column)
@@ -48,10 +49,15 @@ class MoviesController < ApplicationController
     private
     # Making "internal" methods private is not required, but is a common practice.
     # This helps make clear which methods respond to requests, and which ones do not.
+    def reset
+      session[:sort] = @sorting_on_column
+      session[:rate] = @rating_param
+    end
+    
     def rate 
-      return nil if params[:ratings].nil?
-      return params[:ratings] if params[:ratings].is_a?(Array)
-      params[:ratings].keys
+      return session[:rating_param] if params[:ratings].nil?
+      return session[:rating_param] = params[:ratings] if params[:ratings].is_a?(Array)
+      session[:rating_param] = params[:ratings].keys
     end
     def movie_params
       params.require(:movie).permit(:title, :rating, :description, :release_date)
