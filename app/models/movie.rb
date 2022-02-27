@@ -1,4 +1,9 @@
 class Movie < ActiveRecord::Base
+    def self.all_ratings
+        #function definition of enumerable movie ratings
+        Movie.select(:rating).map(&:rating).uniq
+    end
+    
     def self.with_ratings(ratings)
         #returns the entire database of movies if no filters are applied
         return Movie.all unless ratings
@@ -8,9 +13,4 @@ class Movie < ActiveRecord::Base
         Movie.where(rating: ratings)
     end
     
-    def self.all_ratings
-        Movie.select(:rating).uniq.map do |record|
-            record.rating
-        end
-    end
 end
