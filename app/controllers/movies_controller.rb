@@ -15,9 +15,10 @@ class MoviesController < ApplicationController
       # @rating_param = ratings_param
       
       @rating_param = params[:ratings]
+      
       @rating_param = @rating_param.keys if @rating_param
       
-      if @sorting_on_column
+      if @sorting_on_column || @rating_param
         @movies = Movie.with_ratings(@ratings_param).order(@sorting_on_column)
       else
         @movies = Movie.with_ratings(@ratings_param)
