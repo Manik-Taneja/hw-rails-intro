@@ -6,7 +6,7 @@
 Include:
   <% @all_ratings.each do |rating| %>
     <%= rating %>
-    <%= check_box_tag "ratings[#{rating}]", "1", rating.in?(@ratings_param||[]) %>
+    <%= check_box_tag "ratings[#{rating}]", "1", (@rating_param ? @rating_param.include?(rating) : true), id: "ratings_#(rating)" %>
     <% end %>
   <%= submit_tag 'Refresh', :class => 'btn btn-primary', id: "ratings_submit" %>
 <% end %>
@@ -15,13 +15,13 @@ Include:
   <thead>
     <tr>
       <th>
-        <%= link_to "Movie Title", movies_path(:sort => "title"), id: "title_header", class: ("hilite text-white" if @sorting_on_column == "title")%>
+        <%= link_to "Movie Title", movies_path(:sort => "title", :ratings => @rating_param), id: "title_header", class: ("hilite text-white" if @sorting_on_column == "title")%>
       </th>
       <th>
         Rating
       </th>
       <th>
-        <%= link_to "Release Date", movies_path(:sort => "release_date"), id: "release_date_header", class: ("hilite text-white" if @sorting_on_column == "release_date") %>
+        <%= link_to "Release Date", movies_path(:sort => "release_date", :ratings => @rating_param), id: "release_date_header", class: ("hilite text-white" if @sorting_on_column == "release_date") %>
       </th>
       <th>More Info</th>
     </tr>
