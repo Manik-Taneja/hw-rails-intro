@@ -7,14 +7,20 @@ class MoviesController < ApplicationController
     end
   
     def index
-      @movies = Movie.all
       @all_ratings = Movie.all_ratings
-      @rating_param = rate
       reset
-      @sorting_on_column = sorting
       
-      if @sorting_on_column
-        @movies = Movie.with_ratings(@rating_param).order(@sorting_on_column)
+      # if @sorting_on_column
+      #   @movies = Movie.with_ratings(@rating_param).order(@sorting_on_column)
+      # end
+      if params[:sort] || params[:ratings]
+        @sorting_on_column = sorting
+        @rating_param = rate
+        @rating_param ||= @all_ratings
+        @rating_param = @rating_param.keys if @rating_param.respond_to?(:keys)
+        @movies = Movie.where("rating IN (?)", @rating_param ).order(@sorting_on_column)
+      else
+        @movies = Movie.all
       end
     end
   
